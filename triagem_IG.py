@@ -4,6 +4,7 @@ from tkinter import ttk
 from Triagem import preencherTriagem
 import db
 from tkinter import messagebox
+import textwrap
 
 dataAtual = datetime.datetime.now()
 tabelaTriagem = db.tabelaTriagem()
@@ -27,6 +28,9 @@ dados = {
     "conclusao": "-"
 }
 
+def wrap(string, lenght=15):
+    return '\n'.join(textwrap.wrap(string, lenght))
+
 class Application():
     def __init__(self):
         self.root = root
@@ -46,6 +50,8 @@ class Application():
         self.root.geometry("800x800")
         self.root.resizable(False,False)
         self.root.configure(background='#7ea0b1')
+
+
 
     def frame(self):
         self.frame2 = Frame(self.root)
@@ -153,20 +159,20 @@ class Application():
     def exibirTabela(self, listaDados):
         for widget in self.frameResultados.winfo_children(): widget.destroy()
 
-        colunas = ("Data", "Ticket", "Técnico", "Equipamento", "Defeito")
+        colunas = ("Data", "Ticket", "Técnico", "Equipamento", "PecaEquipamento")
         self.tree = ttk.Treeview(self.frameResultados, columns=colunas, show='headings')
         
         self.tree.heading("Data", text="Data")
         self.tree.heading("Ticket", text="Ticket")
         self.tree.heading("Técnico", text="Técnico")
         self.tree.heading("Equipamento", text="Equipamento")
-        self.tree.heading("Defeito", text="Defeito Alegado")
+        self.tree.heading("PecaEquipamento", text="Troca")
 
         self.tree.column("Data", minwidth=80, width=90, anchor="center")
         self.tree.column("Ticket", minwidth=80, width=90, anchor="center")
         self.tree.column("Técnico", minwidth=100, width=150, anchor="center")
         self.tree.column("Equipamento", minwidth=100, width=150, anchor="center")
-        self.tree.column("Defeito", minwidth=150, width=150, anchor="center")
+        self.tree.column("PecaEquipamento", minwidth=150, width=150, anchor="center")
 
         scroolLista = Scrollbar(self.frameResultados, orient='vertical', command=self.tree.yview)
         self.tree.configure(yscroll=scroolLista.set)
@@ -174,7 +180,7 @@ class Application():
         self.tree.pack(fill=BOTH, expand=True, padx=10, pady=5)
 
         for item in listaDados:
-            self.tree.insert("", END, values=(item[1], item[3], item[4], item[7], item[10]))
+            self.tree.insert("", END, values=(item[1], item[3], item[4], item[7], wrap(item[10])))
 
         self.tree.bind("<Double-1>", self.aoClicarNaTabela)
 
