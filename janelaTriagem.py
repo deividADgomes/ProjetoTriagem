@@ -67,19 +67,21 @@ class Janela(object):
         self.entryData = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1, justify="center")
         self.entryData.place(relx=0.03, rely=0.10, relwidth=0.12, height=28)
         self.entryData.insert(0, listaDados[1])
-        self.entryData.configure(state=DISABLED)
+        self.entryData.configure(state="readonly")
 
         self.lblNF = Label(self.jlTriagem, text="Nota Fiscal (NF)", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblNF.place(relx=0.17, rely=0.07)
         self.entryNF = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryNF.place(relx=0.17, rely=0.10, relwidth=0.12, height=28)
         self.entryNF.insert(0, listaDados[2])
+        self.entryNF.configure(state="readonly")
 
         self.lblTicket = Label(self.jlTriagem, text="Nº Ticket", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblTicket.place(relx=0.31, rely=0.07)
         self.entryTicket = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTicket.place(relx=0.31, rely=0.10, relwidth=0.15, height=28)
         self.entryTicket.insert(0, listaDados[3])
+        self.entryTicket.configure(state="readonly")
 
         self.lblRegiao = Label(self.jlTriagem, text="Região", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblRegiao.place(relx=0.48, rely=0.07)
