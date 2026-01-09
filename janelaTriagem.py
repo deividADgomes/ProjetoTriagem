@@ -9,23 +9,6 @@ dataAtual = datetime.datetime.now()
 tabelaTriagem = db.tabelaTriagem()
 
 
-dados = {
-    "data": "00/00/0000",
-    "NF": "-",
-    "ticket": "-",
-    "tecnico": "-",
-    "analistaResponsavel": "-",
-    "regiao": "-",
-    "equipamento": "-",
-    "NSerie": "-",
-    "pecaEquipamentoTrocado": "-",
-    "defeitoAlegado": "-",
-    "constatacaoTecnico": "-",
-    "defeitoConstatado": "-",
-    "testesRealizados": "-",
-    "analise": "-",
-    "conclusao": "-"
-}
  
 class Janela(object):
     def __init__(self, ticket):
@@ -154,6 +137,5 @@ class Janela(object):
         self.btSalvar.place(relx=0.72, rely=0.015, width=180, height=35)
 
       
-
 if __name__== "__main__": 
     Janela("28216360")

@@ -5,6 +5,7 @@ from Triagem import preencherTriagem
 import db
 from tkinter import messagebox
 import textwrap
+import janelaTriagem
 
 dataAtual = datetime.datetime.now()
 tabelaTriagem = db.tabelaTriagem()
@@ -20,6 +21,7 @@ dados = {
     "equipamento": "-",
     "NSerie": "-",
     "pecaEquipamentoTrocado": "-",
+    "cliente": "-",
     "defeitoAlegado": "-",
     "constatacaoTecnico": "-",
     "defeitoConstatado": "-",
@@ -200,6 +202,9 @@ class Application():
 
         Button(self.frameResultados, text="< Voltar para Lista", bg="#e0e0e0", relief=FLAT, 
                command=self.buscarTodas).place(relx=0.0, rely=0.0, height=25, width=120)
+        
+        Button(self.frameResultados, text="Expandir Triagem >", bg="#e0e0e0", relief=FLAT, 
+                command= lambda:[janelaTriagem.Janela(ticket=dados[3])]).place(relx=0.83, rely=0.0, height=25, width=120)
 
         dadoTicket = dados[3]
         dadoTecnico = dados[4]
