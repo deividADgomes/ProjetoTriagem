@@ -47,6 +47,45 @@ def deletarTriagem(ticket):
 def pesquisarTriagensTecnicos(tecnico):
     cur.execute(''' SELECT * FROM triagem WHERE tecnico = ? ''', (tecnico,))
     return cur.fetchall()
+
+def atualizarTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao):
+    cur.execute(''' UPDATE triagem SET 
+        data = ?, 
+        NF = ?, 
+        tecnico = ?, 
+        analistaResponsavel = ?, 
+        regiao = ?, 
+        equipamento = ?, 
+        cliente = ?, 
+        NSerie = ?, 
+        pecaEquipamentoTrocado = ?, 
+        defeitoAlegado = ?, 
+        constatacaoTecnico = ?, 
+        defeitoConstatado = ?, 
+        testesRealizados = ?, 
+        analise = ?, 
+        conclusao = ? 
+        WHERE ticket = ? ''', (
+            data, NF, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, ticket
+        ))
+    con.commit()
+
+def totalTriagens():
+    cur.execute(''' SELECT COUNT(*) FROM triagem ''')
+    return cur.fetchone()[0]
+
+def totalTriagensNoMes(mes, ano):
+    mes = f"{mes:02}" 
+    ano = str(ano)
+
+    cur.execute(''' 
+        SELECT COUNT(*) FROM triagem 
+        WHERE substr(data, 4, 2) = ? 
+        AND substr(data, 7, 4) = ? 
+    ''', (mes, ano))
     
+    resultado = cur.fetchone()
+    return resultado[0] if resultado else 0
+
 if __name__ == "__main__":
     tabelaTriagem()

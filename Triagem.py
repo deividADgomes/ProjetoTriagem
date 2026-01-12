@@ -13,38 +13,41 @@ def preencherTriagem(entradaDocx, saidaDocx, dados):
 
     doc = Document(entradaDocx)
     
-    tabela = doc.tables[2]
+    if dados.get(ticket:= "ticket") is None or dados.get(ticket) == "" or dados.get(ticket) == "-":
+        raise ValueError("O campo 'ticket' é obrigatório para preencher o documento.")
+    else:
+        tabela = doc.tables[2]
 
-    tabela.cell(0, 0).text = "Data: " + dados.get("data","")
-    tabela.cell(0, 1).text = "NF: "+ dados.get("NF", "")
+        tabela.cell(0, 0).text = "Data: " + dados.get("data","")
+        tabela.cell(0, 1).text = "NF: "+ dados.get("NF", "")
 
-    tabela.cell(0, 2).text = "Ticket: " + dados.get("ticket", "")
-    tabela.cell(1, 1).text = "Técnico: "+ dados.get("tecnico", "")
+        tabela.cell(0, 2).text = "Ticket: " + dados.get("ticket", "")
+        tabela.cell(1, 1).text = "Técnico: "+ dados.get("tecnico", "")
 
-    tabela.cell(1, 2).text = "Analista Responsável: "+dados.get("analistaResponsavel", "")
-    tabela.cell(2, 1).text = "Região: "+dados.get("regiao", "")
+        tabela.cell(1, 2).text = "Analista Responsável: "+dados.get("analistaResponsavel", "")
+        tabela.cell(2, 1).text = "Região: "+dados.get("regiao", "")
 
-    tabela.cell(2, 2).text = "Equipamento: "+dados.get("equipamento", "")
-    tabela.cell(3, 1).text = "N° de Série: "+dados.get("NSerie", "")
+        tabela.cell(2, 2).text = "Equipamento: "+dados.get("equipamento", "")
+        tabela.cell(3, 1).text = "N° de Série: "+dados.get("NSerie", "")
 
-    tabela.cell(4, 1).text = "Peça/Equipamento Trocado: "+dados.get("pecaEquipamentoTrocado", "")
+        tabela.cell(4, 1).text = "Peça/Equipamento Trocado: "+dados.get("pecaEquipamentoTrocado", "")
 
-    tabela.cell(5, 1).text = "Defeito Alegado: "+dados.get("defeitoAlegado", "")
+        tabela.cell(5, 1).text = "Defeito Alegado: "+dados.get("defeitoAlegado", "")
 
-    tabela.cell(6, 1).text = "Constatação do Técnico: "+dados.get("constatacaoTecnico", "")
+        tabela.cell(6, 1).text = "Constatação do Técnico: "+dados.get("constatacaoTecnico", "")
 
-    tabela2 = doc.tables[4]
+        tabela2 = doc.tables[4]
 
-    tabela2.cell(0, 0).text = "Defeito constatado: " +dados.get("defeitoConstatado", "")
-    tabela2.cell(1, 0).text = "Testes Realizados: " +dados.get("testesRealizados", "")
-    tabela2.cell(2, 0).text = "Análise: " +dados.get("analise", "")
-    tabela2.cell(3, 0).text = "Conclusão: " +dados.get("conclusao", "")
+        tabela2.cell(0, 0).text = "Defeito constatado: " +dados.get("defeitoConstatado", "")
+        tabela2.cell(1, 0).text = "Testes Realizados: " +dados.get("testesRealizados", "")
+        tabela2.cell(2, 0).text = "Análise: " +dados.get("analise", "")
+        tabela2.cell(3, 0).text = "Conclusão: " +dados.get("conclusao", "")
 
 
-    caminhoFinal = os.path.join(getDiretorio(), saidaDocx)
-    doc.save(caminhoFinal)
+        caminhoFinal = os.path.join(getDiretorio(), saidaDocx)
+        doc.save(caminhoFinal)
 
-    print(f"Documento preenchido e salvo: {saidaDocx}")
+        print(f"Documento preenchido e salvo: {saidaDocx}")
 
 if __name__ == "__main__":
 

@@ -43,6 +43,7 @@ class Application():
         self.frame2.lift()
         self.ComponentesFrame2()
         self.ComponentesFrame3()
+        self.ComponentesFrameDash()
 
         self.botoesLaterais()
         root.mainloop()
@@ -62,10 +63,61 @@ class Application():
         self.frame3 = Frame(self.root)
         self.frame3.place(relx=0.1 , rely=0, relheight=1 , relwidth=0.90)
         self.frame3.configure(bg="lightgrey")
+        self.frameDash = Frame(self.root)
+        self.frameDash.place(relx=0.1 , rely=0, relheight=1 , relwidth=0.90)
+        self.frameDash.configure(bg="lightgrey")
         
         self.frame1 = Frame(self.root)
         self.frame1.place(relx=0 , rely=0, relheight=1 , relwidth=0.10)
         self.frame1.configure(background='#6c8e9e')
+
+    def ComponentesFrameDash(self):
+        for widget in self.frameDash.winfo_children():
+            widget.destroy()
+
+        CorFundoDash = "#f0f2f5"
+        self.frameDash.configure(bg=CorFundoDash)
+
+        Label(self.frameDash, text="VISÃO GERAL DA OPERAÇÃO", 
+              bg=CorFundoDash, fg="#5e6d7a", font=("Segoe UI", 12, "bold"), anchor="w").place(relx=0.03, rely=0.04)
+
+        try:
+            total = db.totalTriagens()
+            
+            mesAtual = dataAtual.month
+            anoAtual = dataAtual.year
+            nomeMes = dataAtual.strftime("%B").capitalize()
+            totalMes = db.totalTriagensNoMes(mesAtual, anoAtual)
+        except:
+            total = 0
+            totalMes = 0
+
+        self.criarDashboard(
+            parent=self.frameDash,
+            titulo="TOTAL DE TRIAGENS",
+            valor=total,
+            icone="📂",
+            CorDestaque="#2980b9",
+            relx=0.03, rely=0.12, relwidth=0.45, relheight=0.25
+        )
+
+        self.criarDashboard(
+            parent=self.frameDash,
+            titulo=f"TRIAGENS MENSAL ({mesAtual}/{anoAtual})",
+            valor=totalMes,
+            icone="📅",
+            CorDestaque="#27ae60",
+            relx=0.50, rely=0.12, relwidth=0.45, relheight=0.25
+        )
+
+    def criarDashboard(self, parent, titulo, valor, icone, CorDestaque, relx, rely, relwidth, relheight):
+        card = Frame(parent, bg="white", bd=0, highlightbackground="#d1d8dd", highlightthickness=1)
+        card.place(relx=relx, rely=rely, relwidth=relwidth, relheight=relheight)
+        Frame(card, bg=CorDestaque).place(relx=0, rely=0, relheight=1, width=6)
+        Label(card, text=icone, bg="white", fg=CorDestaque, font=("Segoe UI Symbol", 28)).place(relx=0.82, rely=0.5, anchor=CENTER)
+        Label(card, text=titulo, bg="white", fg="#7f8c8d", font=("Segoe UI", 9, "bold")).place(x=20, y=15)
+        Label(card, text=str(valor), bg="white", fg="#2c3e50", font=("Segoe UI", 32, "bold")).place(x=20, rely=0.55, anchor="w")
+
   
     def ComponentesFrame3(self):
         style = ttk.Style()
@@ -121,10 +173,14 @@ class Application():
     
         lista = db.pesquisarTriagem(ticket)
         
-        if lista:
+        if not lista:
+            self.mostrarAviso("Nenhum registro encontrado para este Ticket.")
+            return
+        
+        if len(lista) == 1:
             self.exibirDashboard(lista[0]) 
         else:
-            self.mostrarAviso("Nenhum registro encontrado para este Ticket.")
+            self.exibirTabela(lista)
 
     def buscarPorTecnico(self):
         tecnico = self.entryBuscaTecnico.get().strip()
@@ -417,6 +473,13 @@ class Application():
                                          activebackground=corHover, activeforeground="white",
                                          font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2")
         self.btPesquisarTriagem.place(relx=0.05, rely=0.18, relheight=0.06, relwidth=0.9)
+
+        self.btDashboard = Button(self.frame1, text='DASHBOARD', 
+                                  command=lambda: [self.ComponentesFrameDash(), self.mostrar_frame(self.frameDash)],
+                                  bg=corBt, fg=corTxt, wraplength=80,
+                                  activebackground=corHover, activeforeground="white",
+                                  font=("Segoe UI", 8, "bold"), relief="flat", bd=0, cursor="hand2")
+        self.btDashboard.place(relx=0.05, rely=0.26, relheight=0.06, relwidth=0.9)
                    
     def limparCampos(self, frame):
         for widget in frame.winfo_children():

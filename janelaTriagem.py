@@ -70,72 +70,98 @@ class Janela(object):
         self.lblRegiao.place(relx=0.48, rely=0.07)
         self.entryRegiao = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryRegiao.place(relx=0.48, rely=0.10, relwidth=0.20, height=28)
+        self.entryRegiao.insert(0, listaDados[6])
+        self.entryRegiao.configure(state="readonly")
 
         self.lblTecnico = Label(self.jlTriagem, text="Técnico Responsável", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblTecnico.place(relx=0.03, rely=0.15)
         self.entryTecnico = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTecnico.place(relx=0.03, rely=0.18, relwidth=0.30, height=28)
+        self.entryTecnico.insert(0, listaDados[4])
+        self.entryTecnico.configure(state="readonly")
 
         self.lblAnalista = Label(self.jlTriagem, text="Analista Responsável", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblAnalista.place(relx=0.35, rely=0.15)
         self.entryAnalista = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryAnalista.place(relx=0.35, rely=0.18, relwidth=0.33, height=28)
+        self.entryAnalista.insert(0, listaDados[5])
+        self.entryAnalista.configure(state="readonly")
 
         self.lblCliente = Label(self.jlTriagem, text="Cliente", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblCliente.place(relx=0.70, rely=0.15)
+        self.lblCliente.place(relx=0.70, rely=0.07)
         self.entryCliente = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
-        self.entryCliente.place(relx=0.70, rely=0.18, relwidth=0.20, height=28)
+        self.entryCliente.place(relx=0.70, rely=0.10, relwidth=0.20, height=28)
+        self.entryCliente.insert(0, listaDados[8])
+        self.entryCliente.configure(state="readonly")
 
         self.lblEquipamento = Label(self.jlTriagem, text="Modelo do Equipamento", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblEquipamento.place(relx=0.03, rely=0.23)
         self.entryEquipamento = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryEquipamento.place(relx=0.03, rely=0.26, relwidth=0.45, height=28)
+        self.entryEquipamento.insert(0, listaDados[7])
+        self.entryEquipamento.configure(state="readonly")
 
         self.lblNserie = Label(self.jlTriagem, text="N° de Série (SN)", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblNserie.place(relx=0.50, rely=0.23)
         self.entryNSerie = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryNSerie.place(relx=0.50, rely=0.26, relwidth=0.18, height=28)
+        self.entryNSerie.insert(0, listaDados[9])
+        self.entryNSerie.configure(state="readonly")
 
         self.lblTroca = Label(self.jlTriagem, text="Peça/Equipamento Trocado", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblTroca.place(relx=0.03, rely=0.31)
         self.entryTroca = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTroca.place(relx=0.03, rely=0.34, relwidth=0.65, height=28)
+        self.entryTroca.insert(0, listaDados[10])
+        self.entryTroca.configure(state="readonly")
 
         self.lblDefeito = Label(self.jlTriagem, text="Defeito Alegado", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblDefeito.place(relx=0.03, rely=0.39)
         self.textDefeito = Text(self.jlTriagem, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
         self.textDefeito.place(relx=0.03, rely=0.42, relwidth=0.94, height=50)
+        self.textDefeito.insert(1.0, listaDados[11])
+        self.textDefeito.configure(state="disabled")
 
         self.lblConstatacaoTec = Label(self.jlTriagem, text="Constatação do Técnico", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblConstatacaoTec.place(relx=0.03, rely=0.50)
         self.textConstatacaoTec = Text(self.jlTriagem, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
         self.textConstatacaoTec.place(relx=0.03, rely=0.53, relwidth=0.94, height=50)
+        self.textConstatacaoTec.insert(1.0, listaDados[12])
+        self.textConstatacaoTec.configure(state="disabled")
 
         self.lblDefeitoConsta = Label(self.jlTriagem, text="Defeito Constatado (Resumo)", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblDefeitoConsta.place(relx=0.03, rely=0.61)
         self.entryDefeitoConsta = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryDefeitoConsta.place(relx=0.03, rely=0.64, relwidth=0.45, height=28)
+        self.entryDefeitoConsta.insert(0, listaDados[13])
+        self.entryDefeitoConsta.configure(state="readonly")
 
         self.lblTeste = Label(self.jlTriagem, text="Testes Realizados", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblTeste.place(relx=0.50, rely=0.61)
         self.entryTeste = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTeste.place(relx=0.50, rely=0.64, relwidth=0.47, height=28)
+        self.entryTeste.insert(0, listaDados[14])
+        self.entryTeste.configure(state="readonly")
 
         self.lblAnalise = Label(self.jlTriagem, text="Análise do Equipamento/Peça", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblAnalise.place(relx=0.03, rely=0.69)
         self.textAnalise = Text(self.jlTriagem, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
         self.textAnalise.place(relx=0.03, rely=0.72, relwidth=0.94, height=50)
+        self.textAnalise.insert(1.0, listaDados[15])
+        self.textAnalise.configure(state="disabled")
 
         self.lblConclusao = Label(self.jlTriagem, text="Conclusão Final", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblConclusao.place(relx=0.03, rely=0.80)
         self.textConclusao = Text(self.jlTriagem, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
         self.textConclusao.place(relx=0.03, rely=0.83, relwidth=0.94, height=50)
+        self.textConclusao.insert(1.0, listaDados[16])
+        self.textConclusao.configure(state="disabled")
 
-        self.btSalvar = Button(self.jlTriagem, text="SALVAR", bg=corBtSalvar, fg="white", 
-                               font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2")
+        self.btSalvar = Button(self.jlTriagem, text="Fechar", bg="#444444", fg="white", 
+                               font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2", command=self.janela.destroy)
                               
         self.btSalvar.place(relx=0.72, rely=0.015, width=180, height=35)
 
       
 if __name__== "__main__": 
-    Janela("28216360")
+    Janela("1")
