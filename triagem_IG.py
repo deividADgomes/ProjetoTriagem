@@ -138,6 +138,10 @@ class Application():
         self.entryBuscaTecnico.place(relx=0.22, rely=0.30, width=200)
         Button(self.frameBusca, text="Buscar Técnico", bg="#6c8e9e", fg="white", font=("Arial", 8, "bold"), 
                command=self.buscarPorTecnico).place(relx=0.22, rely=0.50, width=200, height=25)
+        
+        opcoes = ["Data", "Ticket", "Técnico", "Analista Responsável", "Equipamento", "Cliente","N° Série"]
+        ComboOpcoes = ttk.Combobox(self.frameBusca, values=opcoes, state='readonly')
+        ComboOpcoes.place(relx=0.02, rely=0.30)
 
         Button(self.frameBusca, text="PESQUISAR TODAS", bg="#507080", fg="white", font=("Arial", 9, "bold"), 
                command=self.buscarTodas).place(relx=0.55, rely=0.25, width=120, height=40)
@@ -147,6 +151,7 @@ class Application():
         
         Button(self.frameBusca, text="DELETAR TRIAGEM", bg="#760707", fg="white", font=("Arial", 9, "bold"), 
                command=self.deletarTriagem).place(relx=0.65, rely=0.65, width=120, height=40)
+        
 
         self.frameResultados = Frame(self.frame3, bg="#f0f2f5")
         self.frameResultados.place(relx=0.02, rely=0.20, relwidth=0.96, relheight=0.84)
@@ -373,12 +378,12 @@ class Application():
 
         self.lblDefeito = Label(self.frame2, text="Defeito Alegado", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblDefeito.place(relx=0.03, rely=0.39)
-        self.textDefeito = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
+        self.textDefeito = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textDefeito.place(relx=0.03, rely=0.42, relwidth=0.94, height=50)
 
         self.lblConstatacaoTec = Label(self.frame2, text="Constatação do Técnico", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblConstatacaoTec.place(relx=0.03, rely=0.50)
-        self.textConstatacaoTec = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
+        self.textConstatacaoTec = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textConstatacaoTec.place(relx=0.03, rely=0.53, relwidth=0.94, height=50)
 
         self.lblDefeitoConsta = Label(self.frame2, text="Defeito Constatado (Resumo)", bg=corFundo, fg=corLbl, font=fonteLbl)
@@ -393,12 +398,12 @@ class Application():
 
         self.lblAnalise = Label(self.frame2, text="Análise do Equipamento/Peça", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblAnalise.place(relx=0.03, rely=0.69)
-        self.textAnalise = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
+        self.textAnalise = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap="word")
         self.textAnalise.place(relx=0.03, rely=0.72, relwidth=0.94, height=50)
 
         self.lblConclusao = Label(self.frame2, text="Conclusão Final", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblConclusao.place(relx=0.03, rely=0.80)
-        self.textConclusao = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1)
+        self.textConclusao = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textConclusao.place(relx=0.03, rely=0.83, relwidth=0.94, height=50)
 
         self.btSalvar = Button(self.frame2, text="SALVAR", bg=corBtSalvar, fg="white", 
