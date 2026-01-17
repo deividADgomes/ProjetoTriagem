@@ -22,20 +22,18 @@ def tabelaTriagem():
                 testesRealizados TEXT,
                 analise TEXT,
                 conclusao TEXT
+                pecaEquipamentoFuncional INTEGER DEFAULT 0
+                check(pecaEquipamentoFuncional IN (0,1))
     )''')
+    verificarMigracao()
 
-def inserirTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao):
+def inserirTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional):
     cur.execute(''' INSERT INTO triagem (
-    data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ''', (
-        data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao
+    data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ''', (
+        data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional
         ))
     con.commit()
-
-def pesquisarTriagem(ticket):
-    cur.execute(''' SELECT * FROM triagem WHERE ticket = ? ''', (ticket,))
-    return cur.fetchall()
-    
 def pesquisarTodasTriagens():
     cur.execute(''' SELECT * FROM triagem ''')
     return cur.fetchall()
@@ -48,7 +46,7 @@ def pesquisarTriagensTecnicos(tecnico):
     cur.execute(''' SELECT * FROM triagem WHERE tecnico = ? ''', (tecnico,))
     return cur.fetchall()
 
-def atualizarTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao):
+def atualizarTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional):
     cur.execute(''' UPDATE triagem SET 
         data = ?, 
         NF = ?, 
@@ -64,9 +62,10 @@ def atualizarTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equ
         defeitoConstatado = ?, 
         testesRealizados = ?, 
         analise = ?, 
-        conclusao = ? 
+        conclusao = ?, 
+        pecaEquipamentoFuncional = ?
         WHERE ticket = ? ''', (
-            data, NF, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, ticket
+            data, NF, tecnico, analistaResponsavel, regiao, equipamento, cliente, NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional, ticket
         ))
     con.commit()
 
@@ -86,6 +85,34 @@ def totalTriagensNoMes(mes, ano):
     
     resultado = cur.fetchone()
     return resultado[0] if resultado else 0
+
+def adicionarColunaPecaFuncional():
+    cur.execute(''' ALTER TABLE triagem ADD COLUMN pecaEquipamentoFuncional integer DEFAULT 0 
+                check(pecaEquipamentoFuncional IN (0,1)) ''')
+    con.commit()
+
+def pesquisaTriagemOpcaoBusca(coluna, valor):
+    query = f"SELECT * FROM triagem WHERE {coluna} LIKE ?"
+    cur.execute(query, (f"%{valor}%",))
+    return cur.fetchall()
+
+def totalTriagensPecaFuncional():
+    cur.execute(''' SELECT COUNT(*) FROM triagem WHERE pecaEquipamentoFuncional = 1 ''')
+    return cur.fetchone()[0]
+def totalTriagensPecaNaoFuncional():
+    cur.execute(''' SELECT COUNT(*) FROM triagem WHERE pecaEquipamentoFuncional = 0 ''')
+    return cur.fetchone()[0]
+
+def pesquisarTriagem(ticket):
+    cur.execute(''' SELECT * FROM triagem WHERE ticket = ? ''', (ticket,))
+    return cur.fetchall()
+
+def verificarMigracao():
+    try:
+        cur.execute("SELECT pecaEquipamentoFuncional FROM triagem LIMIT 1")
+    except sqlite3.OperationalError:
+        cur.execute("ALTER TABLE triagem ADD COLUMN pecaEquipamentoFuncional INTEGER DEFAULT 0")
+        con.commit()
 
 if __name__ == "__main__":
     tabelaTriagem()

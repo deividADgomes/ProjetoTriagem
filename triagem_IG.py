@@ -27,7 +27,8 @@ dados = {
     "defeitoConstatado": "-",
     "testesRealizados": "-",
     "analise": "-",
-    "conclusao": "-"
+    "conclusao": "-",
+    "pecaEquipamentoFuncional": 0
 }
 
 def wrap(string, lenght=15):
@@ -110,6 +111,23 @@ class Application():
             relx=0.50, rely=0.12, relwidth=0.45, relheight=0.25
         )
 
+        self.criarDashboard(
+            parent=self.frameDash,
+            titulo="PEÇAS/EQUIPAMENTOS FUNCIONAIS",
+            valor=db.totalTriagensPecaFuncional(),
+            icone="✅",
+            CorDestaque="#16a085",
+            relx=0.03, rely=0.42, relwidth=0.45, relheight=0.25
+        )
+        self.criarDashboard(
+            parent=self.frameDash,
+            titulo="PEÇAS/EQUIPAMENTOS NÃO FUNCIONAIS",
+            valor=db.totalTriagensPecaNaoFuncional(),
+            icone="❌",
+            CorDestaque="#c0392b",
+            relx=0.50, rely=0.42, relwidth=0.45, relheight=0.25
+        )
+
     def criarDashboard(self, parent, titulo, valor, icone, CorDestaque, relx, rely, relwidth, relheight):
         card = Frame(parent, bg="white", bd=0, highlightbackground="#d1d8dd", highlightthickness=1)
         card.place(relx=relx, rely=rely, relwidth=relwidth, relheight=relheight)
@@ -127,22 +145,18 @@ class Application():
         self.frameBusca = Frame(self.frame3, bg="#d9e1e8", bd=1, relief=GROOVE)
         self.frameBusca.place(relx=0.02, rely=0.02, relwidth=0.96, height=135)
 
-        Label(self.frameBusca, text="Por Ticket:", bg="#d9e1e8", font=("Arial", 9, "bold")).place(relx=0.02, rely=0.1)
-        self.entryBuscaTicket = Entry(self.frameBusca, font=("Arial", 10))
-        self.entryBuscaTicket.place(relx=0.02, rely=0.30, width=130)
-        Button(self.frameBusca, text="Buscar Ticket", bg="#6c8e9e", fg="white", font=("Arial", 8, "bold"), 
-               command=self.buscarPorTicket).place(relx=0.02, rely=0.50, width=130, height=25)
-        
-        Label(self.frameBusca, text="Por Técnico:", bg="#d9e1e8", font=("Arial", 9, "bold")).place(relx=0.22, rely=0.1)
-        self.entryBuscaTecnico = Entry(self.frameBusca, font=("Arial", 10))
-        self.entryBuscaTecnico.place(relx=0.22, rely=0.30, width=200)
-        Button(self.frameBusca, text="Buscar Técnico", bg="#6c8e9e", fg="white", font=("Arial", 8, "bold"), 
-               command=self.buscarPorTecnico).place(relx=0.22, rely=0.50, width=200, height=25)
-        
         opcoes = ["Data", "Ticket", "Técnico", "Analista Responsável", "Equipamento", "Cliente","N° Série"]
-        ComboOpcoes = ttk.Combobox(self.frameBusca, values=opcoes, state='readonly')
-        ComboOpcoes.place(relx=0.02, rely=0.30)
+        self.comboOpcoes = ttk.Combobox(self.frameBusca, values=opcoes, state='readonly')
+        self.comboOpcoes.place(relx=0.02, rely=0.30)
+        self.comboOpcoes.set("Ticket")
 
+        Label(self.frameBusca, text="Seleciona a opção de Busca: ", bg="#d9e1e8", font=("Arial", 9, "bold")).place(relx=0.02, rely=0.1)
+        self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
+        self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
+        
+        Button(self.frameBusca, text="BUSCAR", bg="#6c8e9e", fg="white", font=("Arial", 8, "bold"), 
+               command=self.buscarPorOpcao).place(relx=0.06, rely=0.55, width=300, height=25)
+        
         Button(self.frameBusca, text="PESQUISAR TODAS", bg="#507080", fg="white", font=("Arial", 9, "bold"), 
                command=self.buscarTodas).place(relx=0.55, rely=0.25, width=120, height=40)
     
@@ -162,7 +176,7 @@ class Application():
 
 
     def deletarTriagem(self):
-        ticket = self.entryBuscaTicket.get().strip()
+        ticket = self.entryBuscaOpcoes.get().strip()
         if not ticket:
             self.mostrarAviso("Informe o Ticket para deletar.")
             return
@@ -171,27 +185,27 @@ class Application():
         self.limparPesquisa()
         self.mostrarAviso("Triagem do Ticket deletado.")
 
-
-    def buscarPorTicket(self):
-        ticket = self.entryBuscaTicket.get().strip()
-        if not ticket: return
-    
-        lista = db.pesquisarTriagem(ticket)
+    def buscarPorOpcao(self):
+        coluna = self.comboOpcoes.get().strip()
+        valor = self.entryBuscaOpcoes.get().strip()
+        if not valor: return
         
-        if not lista:
-            self.mostrarAviso("Nenhum registro encontrado para este Ticket.")
+        colunaMap = {
+            "Data": "data",
+            "Ticket": "ticket",
+            "Técnico": "tecnico",
+            "Analista Responsável": "analistaResponsavel",
+            "Equipamento": "equipamento",
+            "Cliente": "cliente",
+            "N° Série": "NSerie"
+        }
+        
+        colunaDB = colunaMap.get(coluna)
+        if not colunaDB:
+            self.mostrarAviso("Opção de busca inválida.")
             return
         
-        if len(lista) == 1:
-            self.exibirDashboard(lista[0]) 
-        else:
-            self.exibirTabela(lista)
-
-    def buscarPorTecnico(self):
-        tecnico = self.entryBuscaTecnico.get().strip()
-        if not tecnico: return
-        
-        lista = db.pesquisarTriagensTecnicos(tecnico)
+        lista = db.pesquisaTriagemOpcaoBusca(colunaDB, valor)
         self.processarListaResultados(lista)
 
     def buscarTodas(self):
@@ -199,8 +213,8 @@ class Application():
         self.processarListaResultados(lista)
 
     def limparPesquisa(self):
-        self.entryBuscaTicket.delete(0, END)
-        self.entryBuscaTecnico.delete(0, END)
+        self.entryBuscaOpcoes.delete(0, END)
+        self.entryBuscaOpcoes.delete(0, END)
 
         for widget in self.frameResultados.winfo_children():
             widget.destroy()
@@ -361,6 +375,11 @@ class Application():
         self.entryCliente = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryCliente.place(relx=0.70, rely=0.18, relwidth=0.20, height=28)
 
+        self.ckbox = Checkbutton(self.frame2, text="Peça/Equipamento Funcional", bg=corFundo, fg=corLbl, font=fonteLbl)
+        self.ckbox.place(relx=0.70, rely=0.26)
+        self.ckboxVar = IntVar()
+        self.ckbox.configure(variable=self.ckboxVar)
+
         self.lblEquipamento = Label(self.frame2, text="Modelo do Equipamento", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblEquipamento.place(relx=0.03, rely=0.23)
         self.entryEquipamento = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
@@ -414,7 +433,7 @@ class Application():
                                    dados["analistaResponsavel"], dados["regiao"], dados["equipamento"], dados["cliente"],
                                    dados["NSerie"], dados["pecaEquipamentoTrocado"], dados["defeitoAlegado"],
                                    dados["constatacaoTecnico"], dados["defeitoConstatado"],
-                                   dados["testesRealizados"], dados["analise"], dados["conclusao"]
+                                   dados["testesRealizados"], dados["analise"], dados["conclusao"], dados["pecaEquipamentoFuncional"]
                                ),])
         self.btSalvar.place(relx=0.72, rely=0.015, width=180, height=35)
 
@@ -449,6 +468,7 @@ class Application():
             dados["testesRealizados"] = self.entryTeste.get()
             dados["analise"] = self.textAnalise.get("1.0", END).strip()
             dados["conclusao"] = self.textConclusao.get("1.0", END).strip()
+            dados["pecaEquipamentoFuncional"] = self.ckboxVar.get()
 
             preencherTriagem("TRIAGEM.docx",
                                    f"{dados.get('cliente','')}_{dados.get('equipamento','')}_{dados.get('ticket','')}_{(dados.get('pecaEquipamentoTrocado',''))}.docx",
@@ -492,6 +512,9 @@ class Application():
                 widget.delete(0, END)
             elif isinstance(widget, Text):
                 widget.delete("1.0", END)
+            elif isinstance(widget, ttk.Combobox):
+                widget.set(0)
+        self.ckboxVar.set(0)
 
 
 if __name__ == "__main__":

@@ -94,6 +94,16 @@ class Janela(object):
         self.entryCliente.insert(0, listaDados[8])
         self.entryCliente.configure(state="readonly")
 
+        self.ckbox = Checkbutton(self.jlTriagem, text="Peça/Equipamento Funcional", bg=corFundo, fg=corLbl, font=fonteLbl)
+        self.ckbox.place(relx=0.70, rely=0.26)
+        self.varCk = IntVar() 
+        self.ckbox.configure(variable=self.varCk, state="disabled")
+        if len(listaDados) > 17:
+            if listaDados[17] == 1:
+                self.varCk.set(1)
+        else:
+            self.varCk.set(0)
+
         self.lblEquipamento = Label(self.jlTriagem, text="Modelo do Equipamento", bg=corFundo, fg=corLbl, font=fonteLbl)
         self.lblEquipamento.place(relx=0.03, rely=0.23)
         self.entryEquipamento = Entry(self.jlTriagem, bg=corBg, font=fonteEntry, relief="solid", bd=1)
