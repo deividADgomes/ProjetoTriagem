@@ -7,6 +7,9 @@ from tkinter import messagebox
 import textwrap
 import janelaTriagem
 
+
+
+
 dataAtual = datetime.datetime.now()
 tabelaTriagem = db.tabelaTriagem()
 root = Tk()
@@ -54,7 +57,6 @@ class Application():
         self.root.geometry("800x800")
         self.root.resizable(False,False)
         self.root.configure(background='#7ea0b1')
-
 
 
     def frame(self):
@@ -145,7 +147,9 @@ class Application():
         self.frameBusca = Frame(self.frame3, bg="#d9e1e8", bd=1, relief=GROOVE)
         self.frameBusca.place(relx=0.02, rely=0.02, relwidth=0.96, height=135)
 
-        opcoes = ["Data", "Ticket", "Técnico", "Analista Responsável", "Equipamento", "Cliente","N° Série"]
+        opcoes = ["Data", "Ticket", "Técnico", "Analista Responsável", "Equipamento", "Cliente","N° Série","Peça/Equipamento Funcional"]
+        self.opcoesPesquisa = ["Sim", "Não"]
+
         self.comboOpcoes = ttk.Combobox(self.frameBusca, values=opcoes, state='readonly')
         self.comboOpcoes.place(relx=0.02, rely=0.30)
         self.comboOpcoes.set("Ticket")
@@ -153,7 +157,7 @@ class Application():
         Label(self.frameBusca, text="Seleciona a opção de Busca: ", bg="#d9e1e8", font=("Arial", 9, "bold")).place(relx=0.02, rely=0.1)
         self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
         self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
-        
+
         Button(self.frameBusca, text="BUSCAR", bg="#6c8e9e", fg="white", font=("Arial", 8, "bold"), 
                command=self.buscarPorOpcao).place(relx=0.06, rely=0.55, width=300, height=25)
         
@@ -166,6 +170,7 @@ class Application():
         Button(self.frameBusca, text="DELETAR TRIAGEM", bg="#760707", fg="white", font=("Arial", 9, "bold"), 
                command=self.deletarTriagem).place(relx=0.65, rely=0.65, width=120, height=40)
         
+        self.comboOpcoes.bind("<<ComboboxSelected>>", self.itemSelecionado)
 
         self.frameResultados = Frame(self.frame3, bg="#f0f2f5")
         self.frameResultados.place(relx=0.02, rely=0.20, relwidth=0.96, relheight=0.84)
@@ -187,7 +192,15 @@ class Application():
 
     def buscarPorOpcao(self):
         coluna = self.comboOpcoes.get().strip()
-        valor = self.entryBuscaOpcoes.get().strip()
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            valor = self.comboPesquisa.get().strip()
+            if valor == "Sim":
+                valor= '1'
+            else:
+                valor= '0'
+        else:
+            valor = self.entryBuscaOpcoes.get().strip()
+        
         if not valor: return
         
         colunaMap = {
@@ -197,7 +210,8 @@ class Application():
             "Analista Responsável": "analistaResponsavel",
             "Equipamento": "equipamento",
             "Cliente": "cliente",
-            "N° Série": "NSerie"
+            "N° Série": "NSerie",
+            "Peça/Equipamento Funcional":"pecaEquipamentoFuncional"
         }
         
         colunaDB = colunaMap.get(coluna)
@@ -213,8 +227,15 @@ class Application():
         self.processarListaResultados(lista)
 
     def limparPesquisa(self):
-        self.entryBuscaOpcoes.delete(0, END)
-        self.entryBuscaOpcoes.delete(0, END)
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            self.comboOpcoes.set('Ticket')
+            self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
+            self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
+            self.entryBuscaOpcoes.delete(0, END)
+            self.entryBuscaOpcoes.delete(0, END)
+        else:
+            self.entryBuscaOpcoes.delete(0, END)
+            self.entryBuscaOpcoes.delete(0, END)
 
         for widget in self.frameResultados.winfo_children():
             widget.destroy()
@@ -428,13 +449,7 @@ class Application():
         self.btSalvar = Button(self.frame2, text="SALVAR", bg=corBtSalvar, fg="white", 
                                font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
                                command=lambda: [self.getDados(dados),
-                                db.inserirTriagem(
-                                   dados["data"], dados["NF"], dados["ticket"], dados["tecnico"],
-                                   dados["analistaResponsavel"], dados["regiao"], dados["equipamento"], dados["cliente"],
-                                   dados["NSerie"], dados["pecaEquipamentoTrocado"], dados["defeitoAlegado"],
-                                   dados["constatacaoTecnico"], dados["defeitoConstatado"],
-                                   dados["testesRealizados"], dados["analise"], dados["conclusao"], dados["pecaEquipamentoFuncional"]
-                               ),])
+                                ])
         self.btSalvar.place(relx=0.72, rely=0.015, width=180, height=35)
 
         self.btLimpar = Button(self.frame2, text="LIMPAR", bg=corBtLimpar, fg="white",
@@ -450,31 +465,42 @@ class Application():
 
         if self.entryTicket.get().strip() == "" or self.entryTicket.get().strip() == "-":
             messagebox.showwarning("Atenção", "O campo 'Ticket' é obrigatório.") 
-            return
-        else:
-            dados["data"] = self.entryData.get()
-            dados["NF"] = self.entryNF.get()
-            dados["ticket"] = self.entryTicket.get()
-            dados["tecnico"] = self.entryTecnico.get()
-            dados["analistaResponsavel"] = self.entryAnalista.get()
-            dados["regiao"] = self.entryRegiao.get()
-            dados["cliente"] = self.entryCliente.get()
-            dados["equipamento"] = self.entryEquipamento.get()
-            dados["NSerie"] = self.entryNSerie.get()
-            dados["pecaEquipamentoTrocado"] = self.entryTroca.get()
-            dados["defeitoAlegado"] = self.textDefeito.get("1.0", END).strip()
-            dados["constatacaoTecnico"] = self.textConstatacaoTec.get("1.0", END).strip()
-            dados["defeitoConstatado"] = self.entryDefeitoConsta.get()
-            dados["testesRealizados"] = self.entryTeste.get()
-            dados["analise"] = self.textAnalise.get("1.0", END).strip()
-            dados["conclusao"] = self.textConclusao.get("1.0", END).strip()
-            dados["pecaEquipamentoFuncional"] = self.ckboxVar.get()
+        else: 
+            if messagebox.askyesno() == False:
+                return
+            else:
+                dados["data"] = self.entryData.get()
+                dados["NF"] = self.entryNF.get()
+                dados["ticket"] = self.entryTicket.get()
+                dados["tecnico"] = self.entryTecnico.get()
+                dados["analistaResponsavel"] = self.entryAnalista.get()
+                dados["regiao"] = self.entryRegiao.get()
+                dados["cliente"] = self.entryCliente.get()
+                dados["equipamento"] = self.entryEquipamento.get()
+                dados["NSerie"] = self.entryNSerie.get()
+                dados["pecaEquipamentoTrocado"] = self.entryTroca.get()
+                dados["defeitoAlegado"] = self.textDefeito.get("1.0", END).strip()
+                dados["constatacaoTecnico"] = self.textConstatacaoTec.get("1.0", END).strip()
+                dados["defeitoConstatado"] = self.entryDefeitoConsta.get()
+                dados["testesRealizados"] = self.entryTeste.get()
+                dados["analise"] = self.textAnalise.get("1.0", END).strip()
+                dados["conclusao"] = self.textConclusao.get("1.0", END).strip()
+                dados["pecaEquipamentoFuncional"] = self.ckboxVar.get()
 
-            preencherTriagem("TRIAGEM.docx",
-                                   f"{dados.get('cliente','')}_{dados.get('equipamento','')}_{dados.get('ticket','')}_{(dados.get('pecaEquipamentoTrocado',''))}.docx",
-                                   dados)
+                self.setDadosDB(dados)
+                
+                preencherTriagem("TRIAGEM.docx",
+                                    f"{dados.get('cliente','')}_{dados.get('equipamento','')}_{dados.get('ticket','')}_{(dados.get('pecaEquipamentoTrocado',''))}.docx",
+                                    dados)
+                
+    def setDadosDB(self, Dados):
+        db.inserirTriagem(dados["data"], dados["NF"], dados["ticket"], dados["tecnico"],
+                                   dados["analistaResponsavel"], dados["regiao"], dados["equipamento"], dados["cliente"],
+                                   dados["NSerie"], dados["pecaEquipamentoTrocado"], dados["defeitoAlegado"],
+                                   dados["constatacaoTecnico"], dados["defeitoConstatado"],
+                                   dados["testesRealizados"], dados["analise"], dados["conclusao"], dados["pecaEquipamentoFuncional"])
         
-    def mostrar_frame(self, frameDesejado):
+    def mostrarFrame(self, frameDesejado):
         frameDesejado.tkraise()
 
     def botoesLaterais(self):
@@ -486,21 +512,21 @@ class Application():
         self.frame1.configure(bg=corBarraLateral)
 
         self.btTriagem = Button(self.frame1, text='TRIAGEM', 
-                                command=lambda: self.mostrar_frame(self.frame2), 
+                                command=lambda: self.mostrarFrame(self.frame2), 
                                 bg=corBt, fg=corTxt, wraplength=80,
                                 activebackground=corHover, activeforeground="white",
                                 font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2")
         self.btTriagem.place(relx=0.05, rely=0.10, relheight=0.06, relwidth=0.9)
 
         self.btPesquisarTriagem = Button(self.frame1, text='PESQUISAR', 
-                                         command=lambda: self.mostrar_frame(self.frame3),
+                                         command=lambda: self.mostrarFrame(self.frame3),
                                          bg=corBt, fg=corTxt,wraplength=80,
                                          activebackground=corHover, activeforeground="white",
                                          font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2")
         self.btPesquisarTriagem.place(relx=0.05, rely=0.18, relheight=0.06, relwidth=0.9)
 
         self.btDashboard = Button(self.frame1, text='DASHBOARD', 
-                                  command=lambda: [self.ComponentesFrameDash(), self.mostrar_frame(self.frameDash)],
+                                  command=lambda: [self.ComponentesFrameDash(), self.mostrarFrame(self.frameDash)],
                                   bg=corBt, fg=corTxt, wraplength=80,
                                   activebackground=corHover, activeforeground="white",
                                   font=("Segoe UI", 8, "bold"), relief="flat", bd=0, cursor="hand2")
@@ -515,6 +541,17 @@ class Application():
             elif isinstance(widget, ttk.Combobox):
                 widget.set(0)
         self.ckboxVar.set(0)
+
+    def itemSelecionado(self, event):
+        itemSelecionado = self.comboOpcoes.get()
+        if itemSelecionado == 'Peça/Equipamento Funcional':
+            self.entryBuscaOpcoes.destroy()
+            self.comboPesquisa = ttk.Combobox(self.frameBusca, values=self.opcoesPesquisa, state="readonly")
+            self.comboPesquisa.place(relx=0.25, rely=0.30, width=200)
+        else:
+            self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
+            self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
+            self.comboPesquisa.destroy()
 
 
 if __name__ == "__main__":
