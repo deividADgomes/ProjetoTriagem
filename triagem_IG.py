@@ -186,9 +186,12 @@ class Application():
             self.mostrarAviso("Informe o Ticket para deletar.")
             return
         
-        db.deletarTriagem(ticket)
-        self.limparPesquisa()
-        self.mostrarAviso("Triagem do Ticket deletado.")
+        if messagebox.askyesno("Atenção","Deseja realmente Deletar?") == False:
+                return
+        else:
+            db.deletarTriagem(ticket)
+            self.limparPesquisa()
+            self.mostrarAviso("Triagem do Ticket deletado.")
 
     def buscarPorOpcao(self):
         coluna = self.comboOpcoes.get().strip()
@@ -225,6 +228,51 @@ class Application():
     def buscarTodas(self):
         lista = db.pesquisarTodasTriagens()
         self.processarListaResultados(lista)
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            self.comboOpcoes.set('Ticket')
+            self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
+            self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
+            self.entryBuscaOpcoes.delete(0, END)
+            self.entryBuscaOpcoes.delete(0, END)
+        else:
+            self.entryBuscaOpcoes.delete(0, END)
+            self.entryBuscaOpcoes.delete(0, END)
+            
+    def voltarBusca(self):
+        self.comboOpcoes.config(state='normal')
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            self.comboPesquisa.config(state='normal')
+        else:
+            self.entryBuscaOpcoes.config(state='normal')
+        valor = " "
+        coluna = self.comboOpcoes.get().strip()
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            valor = self.comboPesquisa.get().strip()
+            if valor == "Sim":
+                valor= '1'
+            else:
+                valor= '0'
+        else:
+            valor = self.entryBuscaOpcoes.get().strip()
+        
+        
+        colunaMap = {
+            "Data": "data",
+            "Ticket": "ticket",
+            "Técnico": "tecnico",
+            "Analista Responsável": "analistaResponsavel",
+            "Equipamento": "equipamento",
+            "Cliente": "cliente",
+            "N° Série": "NSerie",
+            "Peça/Equipamento Funcional":"pecaEquipamentoFuncional"
+        }
+        colunaDB = colunaMap.get(coluna)
+
+        if not valor :
+            self.buscarTodas()
+        else:
+            lista = db.pesquisaTriagemOpcaoBusca(colunaDB, valor)
+            self.processarListaResultados(lista)
 
     def limparPesquisa(self):
         if self.entryBuscaOpcoes.winfo_exists() == 0:
@@ -249,10 +297,10 @@ class Application():
             self.mostrarAviso("Nenhum registro encontrado.")
             return
         
-        if len(lista) == 1:
-            self.exibirDashboard(lista[0])
-        else:
-            self.exibirTabela(lista)
+        #if len(lista) == 1:
+         #   self.exibirDashboard(lista[0])
+        #else:
+        self.exibirTabela(lista)
 
     def exibirTabela(self, listaDados):
         for widget in self.frameResultados.winfo_children(): widget.destroy()
@@ -297,7 +345,7 @@ class Application():
         for widget in self.frameResultados.winfo_children(): widget.destroy()
 
         Button(self.frameResultados, text="< Voltar para Lista", bg="#e0e0e0", relief=FLAT, 
-               command=self.buscarTodas).place(relx=0.0, rely=0.0, height=25, width=120)
+               command=self.voltarBusca).place(relx=0.0, rely=0.0, height=25, width=120)
         
         Button(self.frameResultados, text="Expandir Triagem >", bg="#e0e0e0", relief=FLAT, 
                 command= lambda:[janelaTriagem.Janela(ticket=dados[3])]).place(relx=0.83, rely=0.0, height=25, width=120)
@@ -330,6 +378,12 @@ class Application():
         
         yPosicao = 0.27
 
+        self.comboOpcoes.config(state='disable')
+        if self.entryBuscaOpcoes.winfo_exists() == 0:
+            self.comboPesquisa.config(state='disable')
+        else:
+            self.entryBuscaOpcoes.config(state='readonly')
+            
         def blocoTexto(tit, txt, cor, y):
 
             Frame(self.frameResultados, bg=cor).place(relx=0, rely=y, relwidth=0.01, relheight=0.18)
@@ -466,7 +520,7 @@ class Application():
         if self.entryTicket.get().strip() == "" or self.entryTicket.get().strip() == "-":
             messagebox.showwarning("Atenção", "O campo 'Ticket' é obrigatório.") 
         else: 
-            if messagebox.askyesno() == False:
+            if messagebox.askyesno("Atenção","Deseja realmente salvar?") == False:
                 return
             else:
                 dados["data"] = self.entryData.get()
