@@ -53,7 +53,7 @@ class Application():
         root.mainloop()
 
     def telaPrincipal(self):
-        self.root.title("Tela Principal")
+        self.root.title("Daedalus Gestio")
         self.root.geometry("800x800")
         self.root.resizable(False,False)
         self.root.configure(background='#7ea0b1')
