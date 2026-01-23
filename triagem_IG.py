@@ -81,7 +81,7 @@ class Application():
         CorFundoDash = "#f0f2f5"
         self.frameDash.configure(bg=CorFundoDash)
 
-        Label(self.frameDash, text="VISÃO GERAL DA OPERAÇÃO", 
+        Label(self.frameDash, text="VISÃO GERAL", 
               bg=CorFundoDash, fg="#5e6d7a", font=("Segoe UI", 12, "bold"), anchor="w").place(relx=0.03, rely=0.04)
 
         try:
