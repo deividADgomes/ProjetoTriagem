@@ -75,7 +75,7 @@ class Application():
         
         self.frame1 = Frame(self.root)
         self.frame1.place(relx=0 , rely=0, relheight=1 , relwidth=0.10)
-        self.frame1.configure(background='#6c8e9e')
+        self.frame1.configure(background='#2c3e50')
 
     def ComponentesFrameDash(self):
         for widget in self.frameDash.winfo_children():
@@ -91,7 +91,6 @@ class Application():
             totalMes = db.totalTriagensNoMes(mesAtual, anoAtual)
         
         except:
-            total = 0
             totalMes = 0
 
         self.criarDashboard(
@@ -139,9 +138,6 @@ class Application():
 
   
     def ComponentesFrame3(self):
-        style = ttk.Style()
-        style.configure("Treeview", font=("Arial", 10))
-        style.configure("Treeview.Heading", font=("Arial", 10, "bold"))
 
         self.frameBusca = Frame(self.frame3, bg="#d9e1e8", bd=1, relief=GROOVE)
         self.frameBusca.place(relx=0.02, rely=0.02, relwidth=0.96, height=135)
@@ -170,6 +166,10 @@ class Application():
                command=self.deletarTriagem).place(relx=0.65, rely=0.65, width=120, height=40)
         
         self.comboOpcoes.bind("<<ComboboxSelected>>", self.itemSelecionado)
+
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 10))
+        style.configure("Treeview.Heading", font=("Arial", 10, "bold"))
 
         self.frameResultados = Frame(self.frame3, bg="#f0f2f5")
         self.frameResultados.place(relx=0.02, rely=0.20, relwidth=0.96, relheight=0.80)
@@ -252,8 +252,7 @@ class Application():
             else:
                 valor= '0'
         else:
-            valor = self.entryBuscaOpcoes.get().strip()
-        
+            valor = self.entryBuscaOpcoes.get().strip()    
         
         colunaMap = {
             "Data": "data",
@@ -295,10 +294,6 @@ class Application():
         if not lista:
             self.mostrarAviso("Nenhum registro encontrado.")
             return
-        
-        #if len(lista) == 1:
-         #   self.exibirDashboard(lista[0])
-        #else:
         self.exibirTabela(lista)
 
     def exibirTabela(self, listaDados):
@@ -383,10 +378,10 @@ class Application():
         else:
             self.entryBuscaOpcoes.config(state='readonly')
             
-        def blocoTexto(tit, txt, cor, y):
+        def blocoTexto(titulo, txt, cor, y):
 
             Frame(self.frameResultados, bg=cor).place(relx=0, rely=y, relwidth=0.01, relheight=0.18)
-            Label(self.frameResultados, text=tit, font=("Arial", 10, "bold"), fg="#555", bg="#f0f2f5").place(relx=0.02, rely=y)
+            Label(self.frameResultados, text=titulo, font=("Arial", 10, "bold"), fg="#555", bg="#f0f2f5").place(relx=0.02, rely=y)
 
             t = Text(self.frameResultados, height=5, bg="white", wrap=WORD, font=("Arial", 10), relief=FLAT)
             t.insert("1.0", str(txt))
@@ -413,39 +408,32 @@ class Application():
         Label(self.frame2, text="TRIAGEM TÉCNICA", bg=corFundo, fg="#2c3e50", 
               font=("Segoe UI", 14, "bold")).place(relx=0.03, rely=0.01)
 
-        self.lblData = Label(self.frame2, text="Data", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblData.place(relx=0.03, rely=0.07)
+        Label(self.frame2, text="Data", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.07)
         self.entryData = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1, justify="center")
         self.entryData.place(relx=0.03, rely=0.10, relwidth=0.12, height=28)
         self.entryData.insert(0, dataAtual.strftime('%d/%m/%Y'))
 
-        self.lblNF = Label(self.frame2, text="Nota Fiscal (NF)", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblNF.place(relx=0.17, rely=0.07)
+        Label(self.frame2, text="Nota Fiscal (NF)", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.17, rely=0.07)
         self.entryNF = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryNF.place(relx=0.17, rely=0.10, relwidth=0.12, height=28)
 
-        self.lblTicket = Label(self.frame2, text="Nº Ticket", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblTicket.place(relx=0.31, rely=0.07)
+        Label(self.frame2, text="Nº Ticket", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.31, rely=0.07)
         self.entryTicket = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTicket.place(relx=0.31, rely=0.10, relwidth=0.15, height=28)
 
-        self.lblRegiao = Label(self.frame2, text="Região", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblRegiao.place(relx=0.48, rely=0.07)
+        Label(self.frame2, text="Região", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.48, rely=0.07)
         self.entryRegiao = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryRegiao.place(relx=0.48, rely=0.10, relwidth=0.20, height=28)
 
-        self.lblTecnico = Label(self.frame2, text="Técnico Responsável", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblTecnico.place(relx=0.03, rely=0.15)
+        Label(self.frame2, text="Técnico Responsável", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.15)
         self.entryTecnico = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTecnico.place(relx=0.03, rely=0.18, relwidth=0.30, height=28)
 
-        self.lblAnalista = Label(self.frame2, text="Analista Responsável", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblAnalista.place(relx=0.35, rely=0.15)
+        Label(self.frame2, text="Analista Responsável", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.35, rely=0.15)
         self.entryAnalista = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryAnalista.place(relx=0.35, rely=0.18, relwidth=0.33, height=28)
 
-        self.lblCliente = Label(self.frame2, text="Cliente", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblCliente.place(relx=0.70, rely=0.15)
+        Label(self.frame2, text="Cliente", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.70, rely=0.15)
         self.entryCliente = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryCliente.place(relx=0.70, rely=0.18, relwidth=0.20, height=28)
 
@@ -454,65 +442,54 @@ class Application():
         self.ckboxVar = IntVar()
         self.ckbox.configure(variable=self.ckboxVar)
 
-        self.lblEquipamento = Label(self.frame2, text="Modelo do Equipamento", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblEquipamento.place(relx=0.03, rely=0.23)
+        Label(self.frame2, text="Modelo do Equipamento", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.23)
         self.entryEquipamento = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryEquipamento.place(relx=0.03, rely=0.26, relwidth=0.45, height=28)
 
-        self.lblNserie = Label(self.frame2, text="N° de Série (SN)", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblNserie.place(relx=0.50, rely=0.23)
+        Label(self.frame2, text="N° de Série (SN)", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.50, rely=0.23)
         self.entryNSerie = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryNSerie.place(relx=0.50, rely=0.26, relwidth=0.18, height=28)
 
-        self.lblTroca = Label(self.frame2, text="Peça/Equipamento Trocado", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblTroca.place(relx=0.03, rely=0.31)
+        Label(self.frame2, text="Peça/Equipamento Trocado", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.31)
         self.entryTroca = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTroca.place(relx=0.03, rely=0.34, relwidth=0.65, height=28)
 
-        self.lblDefeito = Label(self.frame2, text="Defeito Alegado", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblDefeito.place(relx=0.03, rely=0.39)
+        Label(self.frame2, text="Defeito Alegado", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.39)
         self.textDefeito = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textDefeito.place(relx=0.03, rely=0.42, relwidth=0.94, height=50)
 
-        self.lblConstatacaoTec = Label(self.frame2, text="Constatação do Técnico", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblConstatacaoTec.place(relx=0.03, rely=0.50)
+        Label(self.frame2, text="Constatação do Técnico", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.50)
         self.textConstatacaoTec = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textConstatacaoTec.place(relx=0.03, rely=0.53, relwidth=0.94, height=50)
 
-        self.lblDefeitoConsta = Label(self.frame2, text="Defeito Constatado (Resumo)", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblDefeitoConsta.place(relx=0.03, rely=0.61)
+        Label(self.frame2, text="Defeito Constatado (Resumo)", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.61)
         self.entryDefeitoConsta = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryDefeitoConsta.place(relx=0.03, rely=0.64, relwidth=0.45, height=28)
 
-        self.lblTeste = Label(self.frame2, text="Testes Realizados", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblTeste.place(relx=0.50, rely=0.61)
+        Label(self.frame2, text="Testes Realizados", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.50, rely=0.61)
         self.entryTeste = Entry(self.frame2, bg=corBg, font=fonteEntry, relief="solid", bd=1)
         self.entryTeste.place(relx=0.50, rely=0.64, relwidth=0.47, height=28)
 
-        self.lblAnalise = Label(self.frame2, text="Análise do Equipamento/Peça", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblAnalise.place(relx=0.03, rely=0.69)
+        Label(self.frame2, text="Análise do Equipamento/Peça", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.69)
         self.textAnalise = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap="word")
         self.textAnalise.place(relx=0.03, rely=0.72, relwidth=0.94, height=50)
 
-        self.lblConclusao = Label(self.frame2, text="Conclusão Final", bg=corFundo, fg=corLbl, font=fonteLbl)
-        self.lblConclusao.place(relx=0.03, rely=0.80)
+        Label(self.frame2, text="Conclusão Final", bg=corFundo, fg=corLbl, font=fonteLbl).place(relx=0.03, rely=0.80)
         self.textConclusao = Text(self.frame2, bg=corBg, font=("Segoe UI", 9), relief="solid", bd=1, wrap='word')
         self.textConclusao.place(relx=0.03, rely=0.83, relwidth=0.94, height=50)
 
-        self.btSalvar = Button(self.frame2, text="SALVAR", bg=corBtSalvar, fg="white", 
-                               font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
-                               command=lambda: [self.getDados(dados),
-                                ])
-        self.btSalvar.place(relx=0.72, rely=0.015, width=180, height=35)
+        Button(self.frame2, text="SALVAR", bg=corBtSalvar, fg="white", 
+                            font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
+                            command=lambda: [self.getDados(dados),
+                                ]).place(relx=0.72, rely=0.015, width=180, height=35)
 
-        self.btLimpar = Button(self.frame2, text="LIMPAR", bg=corBtLimpar, fg="white",
+        Button(self.frame2, text="LIMPAR", bg=corBtLimpar, fg="white",
                                font=("Segoe UI", 10, "bold"), relief="flat", cursor="hand2",
                                command=lambda: [
                                    self.limparCampos(self.frame2),
                                    self.entryData.insert(0,dataAtual.strftime('%d/%m/%Y')),
                                    self.entryNF.focus_set()       
-                               ])
-        self.btLimpar.place(relx=0.72, rely=0.075, width=180, height=30)
+                               ]).place(relx=0.72, rely=0.075, width=180, height=30)
 
     def getDados(self, dados):
 
@@ -557,33 +534,27 @@ class Application():
         frameDesejado.tkraise()
 
     def botoesLaterais(self):
-        corBarraLateral = "#2c3e50"
         corBt = "#34495e"
         corTxt = "#ecf0f1"
         corHover = "#2980b9"
-        
-        self.frame1.configure(bg=corBarraLateral)
+    
+        Button(self.frame1, text='TRIAGEM', 
+                            command=lambda: self.mostrarFrame(self.frame2), 
+                            bg=corBt, fg=corTxt, wraplength=80,
+                            activebackground=corHover, activeforeground="white",
+                            font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2").place(relx=0.05, rely=0.10, relheight=0.06, relwidth=0.9)
 
-        self.btTriagem = Button(self.frame1, text='TRIAGEM', 
-                                command=lambda: self.mostrarFrame(self.frame2), 
-                                bg=corBt, fg=corTxt, wraplength=80,
-                                activebackground=corHover, activeforeground="white",
-                                font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2")
-        self.btTriagem.place(relx=0.05, rely=0.10, relheight=0.06, relwidth=0.9)
+        Button(self.frame1, text='PESQUISAR', 
+                            command=lambda: self.mostrarFrame(self.frame3),
+                            bg=corBt, fg=corTxt,wraplength=80,
+                            activebackground=corHover, activeforeground="white",
+                            font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2").place(relx=0.05, rely=0.18, relheight=0.06, relwidth=0.9)
 
-        self.btPesquisarTriagem = Button(self.frame1, text='PESQUISAR', 
-                                         command=lambda: self.mostrarFrame(self.frame3),
-                                         bg=corBt, fg=corTxt,wraplength=80,
-                                         activebackground=corHover, activeforeground="white",
-                                         font=("Segoe UI", 9, "bold"), relief="flat", bd=0, cursor="hand2")
-        self.btPesquisarTriagem.place(relx=0.05, rely=0.18, relheight=0.06, relwidth=0.9)
-
-        self.btDashboard = Button(self.frame1, text='DASHBOARD', 
-                                  command=lambda: [self.ComponentesFrameDash(), self.mostrarFrame(self.frameDash)],
-                                  bg=corBt, fg=corTxt, wraplength=80,
-                                  activebackground=corHover, activeforeground="white",
-                                  font=("Segoe UI", 8, "bold"), relief="flat", bd=0, cursor="hand2")
-        self.btDashboard.place(relx=0.05, rely=0.26, relheight=0.06, relwidth=0.9)
+        Button(self.frame1, text='DASHBOARD', 
+                            command=lambda: [self.ComponentesFrameDash(), self.mostrarFrame(self.frameDash)],
+                            bg=corBt, fg=corTxt, wraplength=80,
+                            activebackground=corHover, activeforeground="white",
+                            font=("Segoe UI", 8, "bold"), relief="flat", bd=0, cursor="hand2").place(relx=0.05, rely=0.26, relheight=0.06, relwidth=0.9)
                    
     def limparCampos(self, frame):
         for widget in frame.winfo_children():
