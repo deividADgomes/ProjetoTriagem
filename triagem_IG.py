@@ -572,10 +572,10 @@ class Application():
             self.entryBuscaOpcoes.destroy()
             self.comboPesquisa = ttk.Combobox(self.frameBusca, values=self.opcoesPesquisa, state="readonly")
             self.comboPesquisa.place(relx=0.25, rely=0.30, width=200)
-        else:
+        elif itemSelecionado != 'Peça/Equipamento Funcional':
             self.entryBuscaOpcoes = Entry(self.frameBusca, font=("Arial", 10))
             self.entryBuscaOpcoes.place(relx=0.25, rely=0.30, width=200)
-            self.comboPesquisa.destroy()
+
 
 
 if __name__ == "__main__":

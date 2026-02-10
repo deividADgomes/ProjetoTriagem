@@ -21,11 +21,11 @@ def tabelaTriagem():
                 defeitoConstatado TEXT,
                 testesRealizados TEXT,
                 analise TEXT,
-                conclusao TEXT
+                conclusao TEXT,
                 pecaEquipamentoFuncional INTEGER DEFAULT 0
                 check(pecaEquipamentoFuncional IN (0,1))
     )''')
-    verificarMigracao()
+    #verificarMigracao()
 
 def inserirTriagem(data, NF, ticket, tecnico, analistaResponsavel, regiao, equipamento, cliente,NSerie, pecaEquipamentoTrocado, defeitoAlegado, constatacaoTecnico, defeitoConstatado, testesRealizados, analise, conclusao, pecaEquipamentoFuncional):
     cur.execute(''' INSERT INTO triagem (
