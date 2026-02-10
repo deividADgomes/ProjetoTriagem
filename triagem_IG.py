@@ -383,10 +383,10 @@ class Application():
             Frame(self.frameResultados, bg=cor).place(relx=0, rely=y, relwidth=0.01, relheight=0.18)
             Label(self.frameResultados, text=titulo, font=("Arial", 10, "bold"), fg="#555", bg="#f0f2f5").place(relx=0.02, rely=y)
 
-            t = Text(self.frameResultados, height=5, bg="white", wrap=WORD, font=("Arial", 10), relief=FLAT)
-            t.insert("1.0", str(txt))
-            t.configure(state="disabled") 
-            t.place(relx=0.02, rely=y+0.04, relwidth=0.96, relheight=0.13)
+            texto = Text(self.frameResultados, height=5, bg="white", wrap=WORD, font=("Arial", 10), relief=FLAT)
+            texto.insert("1.0", str(txt))
+            texto.configure(state="disabled") 
+            texto.place(relx=0.02, rely=y+0.04, relwidth=0.96, relheight=0.13)
             return y + 0.19
 
         yPosicao = blocoTexto("DEFEITO ALEGADO", dadoDefeitoAlegado, "#e67e22", yPosicao)
